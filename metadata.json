@@ -1,0 +1,7 @@
+{
+  "name": "Jolof Chicken - Digital Platform",
+  "description": "A high-end restaurant platform for Jolof Chicken, featuring a customer ordering system with real-time price calculation and a comprehensive admin back-office.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
