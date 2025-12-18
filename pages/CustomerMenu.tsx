@@ -1,10 +1,10 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ChevronLeft, Plus, Minus, ShoppingCart, X, Check, 
-  MapPin, Clock, Truck, CreditCard, UtensilsCrossed, ArrowRight, Flame, Undo2, CheckSquare, Square
+  MapPin, Clock, Truck, CreditCard, UtensilsCrossed, ArrowRight, Flame, Undo2, CheckSquare, Square, Search
 } from 'lucide-react';
 import Logo from '../components/Logo';
 import { getDishes, getExtras, saveOrder } from '../services/storageService';
@@ -31,7 +31,7 @@ const CustomerMenu: React.FC = () => {
   // Checkout States
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [customerInfo, setCustomerInfo] = useState({ name: '', phone: '', mode: 'Livraison' as Order['mode'], payment: 'Wave' as Order['paymentMethod'] });
-  const [orderComplete, setOrderComplete] = useState(false);
+  const [orderComplete, setOrderComplete] = useState<string | null>(null);
 
   useEffect(() => {
     setDishes(getDishes().filter(d => d.active));
@@ -82,8 +82,9 @@ const CustomerMenu: React.FC = () => {
 
   const handleFinalOrder = () => {
     if (!customerInfo.name || !customerInfo.phone) return;
+    const orderId = Math.random().toString(36).substr(2, 4).toUpperCase();
     const newOrder: Order = {
-      id: Math.random().toString(36).substr(2, 9).toUpperCase(),
+      id: orderId,
       customerName: customerInfo.name,
       customerPhone: customerInfo.phone,
       mode: customerInfo.mode,
@@ -97,23 +98,29 @@ const CustomerMenu: React.FC = () => {
       createdAt: new Date().toISOString()
     };
     saveOrder(newOrder);
-    setOrderComplete(true);
+    setOrderComplete(orderId);
   };
 
   if (orderComplete) {
     return (
       <div className="min-h-screen bg-stone-50 flex items-center justify-center p-6">
-        <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="bg-white p-12 rounded-[3rem] shadow-2xl text-center max-w-lg w-full">
+        <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="bg-white p-12 rounded-[3rem] shadow-2xl text-center max-w-lg w-full border border-stone-100">
           <div className="w-24 h-24 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-8">
             <Check size={48} strokeWidth={3} />
           </div>
-          <h2 className="text-4xl font-black mb-4">Miam ! C'est parti.</h2>
+          <h2 className="text-4xl font-black mb-2">Miam ! Commande reçue.</h2>
+          <p className="text-stone-400 font-bold mb-6">Référence : <span className="text-red-600 font-mono tracking-tighter">#{orderComplete}</span></p>
           <p className="text-stone-500 text-lg mb-8 leading-relaxed">
             Ta commande est en route. Notre chef s'occupe de tout. 🔥
           </p>
-          <button onClick={() => navigate('/')} className="w-full bg-red-600 text-white py-5 rounded-3xl font-bold text-xl hover:bg-red-700 transition-all shadow-xl shadow-red-600/20">
-            Super, merci !
-          </button>
+          <div className="flex flex-col gap-3">
+            <button onClick={() => navigate(`/track/${orderComplete}`)} className="w-full bg-stone-900 text-white py-5 rounded-3xl font-black text-xl hover:bg-black transition-all shadow-xl flex items-center justify-center gap-3">
+              <Search size={22} /> Suivre ma commande
+            </button>
+            <button onClick={() => navigate('/')} className="w-full bg-stone-100 text-stone-600 py-4 rounded-3xl font-bold hover:bg-stone-200 transition-all">
+              Retour à l'accueil
+            </button>
+          </div>
         </motion.div>
       </div>
     );
@@ -162,10 +169,15 @@ const CustomerMenu: React.FC = () => {
           </button>
           <Logo size="sm" />
         </div>
-        <button onClick={() => setIsCartOpen(true)} className="relative bg-stone-900 text-white p-3 rounded-2xl shadow-xl hover:scale-105 active:scale-95 transition-all">
-          <ShoppingCart size={20} />
-          {cart.length > 0 && <span className="absolute -top-2 -right-2 bg-red-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black border-2 border-white">{cart.length}</span>}
-        </button>
+        <div className="flex items-center gap-3">
+          <Link to="/track" className="hidden sm:flex items-center gap-2 bg-stone-100 text-stone-500 px-4 py-2.5 rounded-full font-bold hover:bg-stone-200 transition-all text-sm">
+            <Search size={16} /> Suivre ma commande
+          </Link>
+          <button onClick={() => setIsCartOpen(true)} className="relative bg-stone-900 text-white p-3 rounded-2xl shadow-xl hover:scale-105 active:scale-95 transition-all">
+            <ShoppingCart size={20} />
+            {cart.length > 0 && <span className="absolute -top-2 -right-2 bg-red-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black border-2 border-white">{cart.length}</span>}
+          </button>
+        </div>
       </nav>
 
       <main className="pt-24 pb-32 px-6 max-w-5xl mx-auto">

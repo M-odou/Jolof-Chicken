@@ -1,8 +1,10 @@
+
 import React from 'react';
 import { HashRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import CustomerHome from './pages/CustomerHome';
 import CustomerMenu from './pages/CustomerMenu';
 import CustomerContact from './pages/CustomerContact';
+import OrderTracking from './pages/OrderTracking';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminOrders from './pages/AdminOrders';
 import AdminMenu from './pages/AdminMenu';
@@ -10,8 +12,6 @@ import AdminExtras from './pages/AdminExtras';
 import AdminLogin from './pages/AdminLogin';
 import { isAuthenticated } from './services/storageService';
 
-// Higher Order Component for Protected Routes
-// Updated to use React.FC and optional children to resolve strict TypeScript prop checking errors
 const ProtectedRoute: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   const location = useLocation();
   if (!isAuthenticated()) {
@@ -28,6 +28,8 @@ const App: React.FC = () => {
         <Route path="/" element={<CustomerHome />} />
         <Route path="/menu" element={<CustomerMenu />} />
         <Route path="/contact" element={<CustomerContact />} />
+        <Route path="/track" element={<OrderTracking />} />
+        <Route path="/track/:orderId" element={<OrderTracking />} />
 
         {/* Admin Routes */}
         <Route path="/admin/login" element={<AdminLogin />} />

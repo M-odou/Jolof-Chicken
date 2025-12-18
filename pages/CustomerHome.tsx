@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Flame, Clock, Truck, ChevronRight, ShieldCheck } from 'lucide-react';
+import { Flame, Clock, Truck, ChevronRight, ShieldCheck, Search } from 'lucide-react';
 import Logo from '../components/Logo';
 
 const CustomerHome: React.FC = () => {
@@ -15,6 +15,9 @@ const CustomerHome: React.FC = () => {
           <div className="hidden lg:flex gap-8 font-medium">
             <Link to="/menu" className="hover:text-red-600 transition-colors">Notre concept</Link>
             <Link to="/menu" className="hover:text-red-600 transition-colors">Menu</Link>
+            <Link to="/track" className="hover:text-red-600 transition-colors flex items-center gap-1.5 font-bold">
+               <Search size={16} /> Suivre ma commande
+            </Link>
             <Link to="/contact" className="hover:text-red-600 transition-colors">Contact</Link>
           </div>
         </div>
@@ -59,6 +62,9 @@ const CustomerHome: React.FC = () => {
               <Link to="/menu" className="group flex items-center gap-3 bg-red-600 text-white px-8 py-5 rounded-2xl text-xl font-bold shadow-2xl shadow-red-600/30 hover:bg-red-700 transition-all hover:scale-105 active:scale-95">
                 👉 Commander maintenant
                 <ChevronRight className="group-hover:translate-x-1 transition-transform" />
+              </Link>
+              <Link to="/track" className="flex items-center gap-2 text-stone-600 font-black hover:text-red-600 transition-colors py-4 px-6">
+                <Search size={20} /> Suivre ma commande
               </Link>
             </div>
           </motion.div>
@@ -112,8 +118,8 @@ const CustomerHome: React.FC = () => {
             <h4 className="font-bold text-lg mb-6">Liens rapides</h4>
             <ul className="space-y-4 text-stone-400">
               <li><Link to="/menu" className="hover:text-red-500 transition-colors">Commander en ligne</Link></li>
+              <li><Link to="/track" className="hover:text-red-500 transition-colors">Suivre ma commande</Link></li>
               <li><Link to="/contact" className="hover:text-red-500 transition-colors">Contact & Localisation</Link></li>
-              <li><a href="#" className="hover:text-red-500 transition-colors">FAQ</a></li>
             </ul>
           </div>
           <div>
